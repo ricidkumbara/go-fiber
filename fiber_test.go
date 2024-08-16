@@ -340,3 +340,23 @@ func TestErrorHandling(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, `Error ups`, string(bytes))
 }
+
+// Todo
+func TestViewTemplate(t *testing.T) {}
+
+func TestHttpClient(t *testing.T) {
+	client := fiber.AcquireClient()
+	fiber.ReleaseClient(client)
+}
+
+func TestHttpClient2(t *testing.T) {
+	client := fiber.AcquireClient()
+
+	agent := client.Get("https://example.com")
+	status, res, err := agent.String()
+	assert.Nil(t, err)
+	assert.Equal(t, 200, status)
+	assert.Contains(t, res, "Example Domain")
+
+	fiber.ReleaseClient(client)
+}

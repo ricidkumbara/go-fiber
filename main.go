@@ -16,15 +16,33 @@ func main() {
 		Prefork:      true,
 	})
 
+	// Todo
+	app.Use(func(c *fiber.Ctx) error {
+		fmt.Println("Middleware before")
+		err := c.Next()
+		fmt.Println("Middleware after")
+		return err
+	})
+
+	app.Use("/api", func(c *fiber.Ctx) error {
+		fmt.Println("Middleware before for /api")
+		err := c.Next()
+		fmt.Println("Middleware after for /api")
+		return err
+	})
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hello World!")
+	})
+	app.Get("/api/hello", func(c *fiber.Ctx) error {
+		return c.SendString("Hello World!")
+	})
+
 	if fiber.IsChild() {
 		fmt.Println("Child process")
 	} else {
 		fmt.Println("Parent process")
 	}
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello World!")
-	})
 
 	err := app.Listen("localhost:3000")
 	if err != nil {
